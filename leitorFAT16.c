@@ -82,7 +82,7 @@ int fat16(char* image){
     f8_3 aux;
     unsigned char firstvalue; 
     int helper = 0;
-
+    
     fseek(arquivo, initROOTdir, SEEK_SET);
     
     for(int i = initROOTdir; i < initDATA; i+=32){
@@ -131,76 +131,60 @@ int fat16(char* image){
                 
             } 
     }
+
     //printf("%d", helper);
     for(int i = 0; i<helper; i++){
+        
         printf("NAME:");
         for(int j = 0; j<8; j++){
-            if(entry[i].name[j] != ' ')
-            printf("%c", entry[i].name[j]);
+            if(entry[i].name[j] != ' '){
+                printf("%c", entry[i].name[j]);
+            }
         }puts("");
+       
+       
+
         printf("EXT:");
+    
         for(int l = 0; l<3; l++){
             if(entry[i].ext[l] != ' ')
-            printf("%c", entry[i].ext[l]);
-        }puts("");
+                printf("%c", entry[i].ext[l]);
+        }
+        
+        puts("");
         printf("Type: %x\nFirstCluster: %d\nSize: %u\n", entry[i].type, entry[i].first_cluster, entry[i].size);
         puts("");
         
-    }
 
+    }   
 
-    char receive[18];
-    char totalname[18];
-    fgets(receive, 18, stdin);
-    char aux2[8];
-    char aux3[14];
-    
-
-    for(int i = 0; i < (sizeof(receive)-4); i++){
-        aux3[i] = receive[i+4]; 
-    }
-    
-
-
-    for(int i = 0; i < helper; i++){
-        int K = 0;
-        strcat(totalname, entry[i].name);
-        //strcat(totalname, ".");
-        //strcat(totalname, entry[i].ext);
-        printf("%s", totalname);
-        /*
-       for(int j = 0; j<8; j++){
-            if(entry[i].name[j] != ' '){
-                totalname[j] = entry[i].name[j]; 
-                //printf("%c\n",totalname[j]);
-
-                K++;
-            }
+    for(int i=0; i<helper; i++){
+        char nome[9], ext[4];
+        strncpy(nome, entry[i].name, 8);
+        strncpy(ext, entry[i].ext, 3);
+        nome[8] = '\0';
+        ext[3] = '\0';
+        char filename[20];
+        if(ext[i] != '\0'){
+            sprintf(filename, "%s.%s", nome, ext);
+        } else {
+            sprintf(filename, "%s", nome);
         }
-        totalname[K+1] = ".";
         
-        for(int l = 0; l<3; l++){
-            if(entry[i].ext[l] != ' '){
-                totalname[l+K+2] = entry[i].ext[l];
-                //printf("%c\n",totalname[i]);
-            }
 
-        }
-        if(strncmp(aux3, totalname, sizeof(totalname)) == 0){
-            printf("%s", totalname);
-        }
-        totalname[0] = '\0';
-        //printf("FINAL");
-    
-        */
+        
+        printf("%s\n", filename);
+        
+
     }
-    
-    //printf("%s", receive);
-    //if (strncmp(entry.filename, "filename", 8) == 0 && strncmp(entry.ext, "ext", 3) == 0) 
-    //if(strncmp(entry[i].name, receive, sizeof(entry[i].name)))
 
-    
-   
+
+
+
+
+    //printf("%s", filename);    
+    char receive[18];
+    fgets(receive, 18, stdin);
 
 
 
